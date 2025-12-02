@@ -9,18 +9,20 @@ const recipeSchema = new Schema(
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     categoryId: [{ type: Schema.Types.ObjectId, ref: "Category" }],
     ingredients: [
-    {
-      ingredientId: {
-        type: Schema.Types.ObjectId,
-        ref: "Ingredient",
-        required: true,
+      {
+        ingredientId: {
+          type: Schema.Types.ObjectId,
+          ref: "Ingredient",
+          required: true,
+        },
+        quantity: { type: String, required: true },
+        unit: { type: String, required: true },
       },
-      quantity: { type: String, required: true },
-      unit: { type: String, required: true },
-    },
-  ],
+    ],
   },
   { timestamps: true }
 );
 
 const Recipe = model("Recipe", recipeSchema);
+
+export default Recipe;
