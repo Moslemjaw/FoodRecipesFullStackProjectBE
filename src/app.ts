@@ -22,7 +22,7 @@ app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
 
-app.use("/users", authorize, userRouter);
+app.use("/users", userRouter);
 app.use("/recipes", recipeRouter);
 app.use("/ingredients", ingredientRouter);
 app.use("/favorites", favoritesRouter);

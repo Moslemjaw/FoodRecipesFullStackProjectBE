@@ -79,4 +79,23 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { register, login };
+const getAllUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getUserById = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findById(userId);
+    res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { register, login, getAllUser, getUserById };
