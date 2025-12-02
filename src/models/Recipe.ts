@@ -1,13 +1,14 @@
 import { model, Schema } from "mongoose";
 
-const recipeSchema = new Schema({
-  title: { type: String, require: true },
-  instructions: { type: String, require: true },
-  image: { type: String },
-  cookingTime: { type: String },
-  userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  categoryId: { type: Schema.Types.ObjectId, ref: "Category", required: true },
-  ingredients: [
+const recipeSchema = new Schema(
+  {
+    title: { type: String, require: true },
+    instructions: [{ type: String, require: true }],
+    image: { type: String },
+    cookingTime: { type: String, required: true },
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    categoryId: [{ type: Schema.Types.ObjectId, ref: "Category" }],
+    ingredients: [
     {
       ingredientId: {
         type: Schema.Types.ObjectId,
@@ -18,8 +19,8 @@ const recipeSchema = new Schema({
       unit: { type: String, required: true },
     },
   ],
-});
+  },
+  { timestamps: true }
+);
 
 const Recipe = model("Recipe", recipeSchema);
-
-export default Recipe;
