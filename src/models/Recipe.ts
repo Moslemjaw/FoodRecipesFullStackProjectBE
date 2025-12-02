@@ -7,7 +7,9 @@ const recipeSchema = new Schema(
     image: { type: String },
     cookingTime: { type: String, required: true },
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    categoryId: [{ type: Schema.Types.ObjectId, ref: "Category" }],
+    categoryId: [
+      { type: Schema.Types.ObjectId, ref: "Category", require: true },
+    ],
     ingredients: [
       {
         ingredientId: {
