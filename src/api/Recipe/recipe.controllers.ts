@@ -12,7 +12,7 @@ const createRecipe = async (
     const { title, instructions, cookingTime, categoryId, ingredients } =
       req.body;
     const userId = req.user?.id;
-
+    console.log(req.body);
     const foundUser = await User.findById(userId);
 
     if (!foundUser) {
