@@ -2,8 +2,8 @@ import { model, Schema } from "mongoose";
 
 const recipeSchema = new Schema(
   {
-    title: { type: String, require: true },
-    instructions: [{ type: String, require: true }],
+    title: { type: String, required: true },
+    instructions: [{ type: String, required: true }],
     image: { type: String },
     cookingTime: { type: String, required: true },
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
