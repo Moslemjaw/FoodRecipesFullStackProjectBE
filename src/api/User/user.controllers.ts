@@ -13,10 +13,7 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
     if (findUser) {
       return res.status(400).json("User already exists");
     } else {
-      const hashedPassword = await bcrypt.hash(
-        password,
-        parseInt(process.env.SALT)
-      );
+      const hashedPassword = await bcrypt.hash(password, process.env.SALT);
       let imagePath = "";
       if (req.file) {
         imagePath = req.file.path;
