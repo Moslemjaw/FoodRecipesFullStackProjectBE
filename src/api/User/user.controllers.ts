@@ -2,6 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import User from "../../models/User";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -10,7 +13,10 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
     if (findUser) {
       return res.status(400).json("User already exists");
     } else {
-      const hashedPassword = await bcrypt.hash(password, process.env.SALT);
+      const hashedPassword = await bcrypt.hash(
+        password,
+        parseInt(process.env.SALT)
+      );
       let imagePath = "";
       if (req.file) {
         imagePath = req.file.path;
@@ -22,7 +28,7 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
         image: imagePath,
       });
       const token = jwt.sign(
-        { id: user._id },
+        { id: user._id.toString() },
         process.env.JWT_SECRET as string,
         {
           expiresIn: "2h",
@@ -56,7 +62,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
         return res.status(400).json("Invalid Credentials");
       } else {
         const token = jwt.sign(
-          { id: user._id },
+          { id: user._id.toString() },
           process.env.JWT_SECRET as string,
           { expiresIn: "2h" }
         );
