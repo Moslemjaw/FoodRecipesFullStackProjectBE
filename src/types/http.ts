@@ -2,7 +2,7 @@ import { Request } from "express";
 
 export interface userType {
   id: string;
-  role: string;
+  role?: string;
 }
 
 export interface customRequestType extends Request {

@@ -12,11 +12,11 @@ export const authorize = (req: Request, res: Response, next: NextFunction) => {
     }
     const payload = jwt.verify(token, process.env.JWT_SECRET as string) as {
       id: string;
-      role: string;
+      role?: string;
     };
     r.user = {
       id: payload.id,
-      role: payload.role,
+      role: payload.role || "user",
     };
     next();
   } catch (error) {
