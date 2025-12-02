@@ -2,6 +2,7 @@ import { NextFunction, Response } from "express";
 import Favorites from "../../models/Favorites";
 import Recipe from "../../models/Recipe";
 import { customRequestType } from "../../types/http";
+import mongoose from "mongoose";
 
 const addFavorite = async (
   req: customRequestType,
@@ -11,6 +12,10 @@ const addFavorite = async (
   try {
     const { recipeID } = req.body;
     const userID = req.user?.id;
+
+    if (!mongoose.Types.ObjectId.isValid(recipeID)) {
+      return res.status(400).json("Invalid recipe ID");
+    }
 
     const recipe = await Recipe.findById(recipeID);
     if (!recipe) {

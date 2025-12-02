@@ -6,7 +6,14 @@ const errorHandling = (
   res: Response,
   next: NextFunction
 ) => {
-  res.status(err.status).json(err);
+  console.log(err);
+
+  const statusCode = err.status || 500;
+
+  res.status(statusCode).json({
+    message: err.message || "Internal Server Error",
+    error: err,
+  });
 };
 
 export default errorHandling;
