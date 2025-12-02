@@ -13,11 +13,11 @@ import { authorize } from "../../middlewares/Authorize";
 const recipeRouter = Router();
 
 recipeRouter.get("/", authorize, getAllRecipes);
-recipeRouter.get("/my-recipes", getMyRecipes);
+recipeRouter.get("/my-recipes", authorize, getMyRecipes);
 recipeRouter.get("/category/:categoryId", getRecipeByCategory);
 
 recipeRouter.get("/:id", getRecipeById);
-recipeRouter.post("/", upload.single("image"), createRecipe);
-recipeRouter.put("/:id", upload.single("image"), updateRecipe);
+recipeRouter.post("/", authorize, upload.single("image"), createRecipe);
+recipeRouter.put("/:id", authorize, upload.single("image"), updateRecipe);
 recipeRouter.delete("/:id", authorize, deleteRecipe);
 export default recipeRouter;
