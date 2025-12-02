@@ -5,7 +5,6 @@ import errorHandling from "./middlewares/ErrorHandling";
 import cors from "cors";
 import { authorize } from "./middlewares/Authorize";
 import motFoundHandler from "./middlewares/notFoundHandler";
-import recipeIngredientRouter from "./api/RecipeIngredient/recipeIngredient.routers";
 import recipeRouter from "./api/Recipe/recipe.routers";
 import ingredientRouter from "./api/Ingredient/ingredient.routers";
 import morgan from "morgan";
@@ -16,9 +15,9 @@ const app = express();
 
 app.use(cors());
 app.use(morgan("dev"));
+app.use(express.json());
 
 app.use("/users", authorize, userRouter);
-app.use("/recipe-ingredients", recipeIngredientRouter);
 app.use("/recipes", recipeRouter);
 app.use("/ingredients", ingredientRouter);
 
