@@ -1,9 +1,9 @@
 import { model, Schema } from "mongoose";
 
-const ingredentSchema = new Schema({
+const ingredientSchema = new Schema({
   name: { type: String, require: true },
 });
 
-const Ingredient = model("Ingredent", ingredentSchema);
+const Ingredient = model("Ingredient", ingredientSchema);
 
 export default Ingredient;
