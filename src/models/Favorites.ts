@@ -2,8 +2,8 @@ import { model, Schema } from "mongoose";
 
 const favoritesSchema = new Schema(
   {
-    userID: [{ type: Schema.Types.ObjectId, ref: "User" }],
-    recipeID: [{ type: Schema.Types.ObjectId, ref: "Recipe" }],
+    userID: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    recipeID: { type: Schema.Types.ObjectId, ref: "Recipe", required: true },
   },
   { timestamps: true }
 );

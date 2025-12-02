@@ -9,14 +9,15 @@ import {
   updateRecipe,
   deleteRecipe,
 } from "./recipe.controllers";
-
+import { authorize } from "../../middlewares/Authorize";
 const recipeRouter = Router();
 
-recipeRouter.post("/", upload.single("image"), createRecipe);
-recipeRouter.get("/", getAllRecipes);
-recipeRouter.get("/:id", getRecipeById);
+recipeRouter.get("/", authorize, getAllRecipes);
 recipeRouter.get("/my-recipes", getMyRecipes);
 recipeRouter.get("/category/:categoryId", getRecipeByCategory);
+
+recipeRouter.get("/:id", getRecipeById);
+recipeRouter.post("/", upload.single("image"), createRecipe);
 recipeRouter.put("/:id", upload.single("image"), updateRecipe);
-recipeRouter.delete("/:id", deleteRecipe);
+recipeRouter.delete("/:id", authorize, deleteRecipe);
 export default recipeRouter;
