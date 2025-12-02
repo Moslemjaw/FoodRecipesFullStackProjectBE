@@ -9,16 +9,16 @@ const recipeSchema = new Schema(
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     categoryId: [{ type: Schema.Types.ObjectId, ref: "Category" }],
     ingredients: [
-      {
-        ingredient: {
-          type: Schema.Types.ObjectId,
-          ref: "Ingredient",
-          required: true,
-        },
-        quantity: { type: Number, required: true },
-        unit: { type: String, required: true },
+    {
+      ingredientId: {
+        type: Schema.Types.ObjectId,
+        ref: "Ingredient",
+        required: true,
       },
-    ],
+      quantity: { type: String, required: true },
+      unit: { type: String, required: true },
+    },
+  ],
   },
   { timestamps: true }
 );
