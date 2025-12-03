@@ -13,10 +13,12 @@ import ratingRouter from "./api/Rating/rating.routers";
 import categoryRouter from "./api/Category/category.routers";
 import connectDB from "./database";
 import followRouter from "./api/Follow/follow.router";
+import path from "path";
 
 dotenv.config();
 
 const app = express();
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use(cors());
 app.use(morgan("dev"));
