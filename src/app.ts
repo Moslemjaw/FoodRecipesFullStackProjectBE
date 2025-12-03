@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import path from "path";
 import userRouter from "./api/User/user.routers";
 import errorHandling from "./middlewares/ErrorHandling";
 import cors from "cors";
@@ -21,6 +22,8 @@ const app = express();
 app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
+
+app.use("/media", express.static(path.join(__dirname, "../uploads")));
 
 app.use("/users", userRouter);
 app.use("/recipes", recipeRouter);
