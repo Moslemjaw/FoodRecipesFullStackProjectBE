@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import Recipe from "../../models/Recipe";
 import User from "../../models/User";
 import { customRequestType } from "../../types/http";
+import { Types } from "mongoose";
 
 const createRecipe = async (
   req: customRequestType,
@@ -12,7 +13,18 @@ const createRecipe = async (
     const { title, instructions, cookingTime, categoryId, ingredients } =
       req.body;
     const userId = req.user?.id;
-    console.log(req.body);
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    // Validate required fields
+    if (!title || !cookingTime) {
+      return res.status(400).json({
+        message: "Title and cookingTime are required",
+      });
+    }
+
     const foundUser = await User.findById(userId);
 
     if (!foundUser) {
@@ -25,18 +37,68 @@ const createRecipe = async (
       imagePath = req.file.path;
     }
 
+    // Handle instructions - ensure it's an array
+    let instructionsArray: string[] = [];
+    if (instructions) {
+      if (Array.isArray(instructions)) {
+        instructionsArray = instructions;
+      } else if (typeof instructions === "string") {
+        instructionsArray = [instructions];
+      }
+    }
+
+    // Handle categoryId - ensure it's an array of ObjectIds
+    let categoryIdArray: Types.ObjectId[] = [];
+    if (categoryId) {
+      const categoryIds = Array.isArray(categoryId) ? categoryId : [categoryId];
+      categoryIdArray = categoryIds.map((id) => new Types.ObjectId(id));
+    }
+
+    // Handle ingredients - parse if it's a JSON string and convert ingredientId to ObjectId
+    let parsedIngredients: any[] = [];
+    if (ingredients) {
+      try {
+        let ingredientsData: any[] = [];
+        if (typeof ingredients === "string") {
+          const parsed = JSON.parse(ingredients);
+          ingredientsData = Array.isArray(parsed) ? parsed : [parsed];
+        } else if (Array.isArray(ingredients)) {
+          ingredientsData = ingredients;
+        } else {
+          ingredientsData = [ingredients];
+        }
+
+        // Convert ingredientId strings to ObjectId
+        parsedIngredients = ingredientsData.map((ing) => ({
+          ...ing,
+          ingredientId: new Types.ObjectId(ing.ingredientId),
+        }));
+      } catch (parseError) {
+        return res.status(400).json({
+          message: "Invalid ingredients format. Expected JSON array.",
+        });
+      }
+    }
+
     const newRecipe = await Recipe.create({
       title,
-      instructions,
+      instructions: instructionsArray,
       image: imagePath,
       cookingTime,
-      userId,
-      categoryId,
-      ingredients,
+      userId: new Types.ObjectId(userId),
+      categoryId: categoryIdArray,
+      ingredients: parsedIngredients,
     });
 
     res.status(201).json(newRecipe);
-  } catch (error) {
+  } catch (error: any) {
+    // Handle Mongoose validation errors
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        message: "Validation error",
+        errors: Object.values(error.errors).map((e: any) => e.message),
+      });
+    }
     next(error);
   }
 };
