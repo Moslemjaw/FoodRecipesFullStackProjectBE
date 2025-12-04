@@ -9,10 +9,17 @@ const createRecipe = async (
   next: NextFunction
 ) => {
   try {
-    const { title, instructions, cookingTime, categoryId, ingredients } =
-      req.body;
+    const { title, instructions, cookingTime, categoryId } = req.body;
     const userId = req.user?.id;
-    console.log(req.body);
+
+    console.log("File received:", req.file);
+    console.log("Body received:", req.body);
+
+    let ingredients = req.body.ingredients;
+    if (typeof ingredients === "string") {
+      ingredients = JSON.parse(ingredients);
+    }
+
     const foundUser = await User.findById(userId);
 
     if (!foundUser) {
@@ -22,7 +29,7 @@ const createRecipe = async (
     let imagePath = "";
 
     if (req.file) {
-      imagePath = req.file.path;
+      imagePath = `/media/${req.file.filename}`;
     }
 
     const newRecipe = await Recipe.create({
@@ -122,8 +129,14 @@ const updateRecipe = async (
   try {
     const { id } = req.params;
     const userID = req.user?.id;
-    const { title, instructions, cookingTime, categoryId, ingredients } =
-      req.body;
+    const { title, instructions, cookingTime, categoryId } = req.body;
+
+    // Parse ingredients - it comes as a string from FormData
+    let ingredients = req.body.ingredients;
+    if (typeof ingredients === "string") {
+      ingredients = JSON.parse(ingredients);
+    }
+
     const foundRecipe = await Recipe.findById(id);
     if (!foundRecipe) {
       return res.status(404).json("Recipe not found");
@@ -134,7 +147,8 @@ const updateRecipe = async (
 
     let imagePath = foundRecipe.image;
     if (req.file) {
-      imagePath = req.file.path;
+      // Save the URL path, not file system path
+      imagePath = `/media/${req.file.filename}`;
     }
 
     const updatedRecipe = await Recipe.findByIdAndUpdate(
