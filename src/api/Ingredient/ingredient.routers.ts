@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { authorize } from "../../middlewares/Authorize";
 import {
   addIngredient,
   getAllIngredients,
@@ -8,8 +9,8 @@ import {
 
 const ingredientRouter = Router();
 
-ingredientRouter.post("/", addIngredient);
+ingredientRouter.post("/", authorize, addIngredient);
 ingredientRouter.get("/", getAllIngredients);
 ingredientRouter.get("/search", searchIngredients);
-ingredientRouter.delete("/:id", deleteIngredient);
+ingredientRouter.delete("/:id", authorize, deleteIngredient);
 export default ingredientRouter;
